@@ -1,0 +1,200 @@
+<apex:page controller="MassEmailController" action="{!massEmailHandler}" showHeader="true" sidebar="true"> 
+
+<script type="text/javascript">
+        function updateToLstCheckboxes(obj){
+            var inputCheckBox = obj;
+           
+                  var inputs = document.getElementsByTagName("input"); 
+                  for(var i = 0; i < inputs.length; i++) 
+                  { 
+                    
+                      if(inputs[i].type == "checkbox" && inputs[i].id.indexOf("toLstChkBox") > -1) 
+                        {   
+                           if(obj.checked)
+                           {  
+                             inputs[i].checked = true; 
+                           }
+                           else
+                           {
+                            inputs[i].checked = false; 
+                           }
+                        } 
+                  }
+         }                  
+ 
+     function updateCCLstCheckboxes(obj){
+            var inputCheckBox = obj;
+           
+              var inputs = document.getElementsByTagName("input"); 
+              for(var i = 0; i < inputs.length; i++) 
+              { 
+                
+                  if(inputs[i].type == "checkbox" && inputs[i].id.indexOf("ccLstChkBox") > -1) 
+                    {   
+                       if(obj.checked)
+                       {  
+                         inputs[i].checked = true; 
+                       }
+                       else
+                       {
+                        inputs[i].checked = false; 
+                       }
+                    } 
+              }
+         }                  
+ 
+           
+    </script>
+ 
+    
+   <apex:pageMessages rendered="{!isPreview}" />
+      
+   <apex:form rendered="{!isPreview}">
+    <br/>
+           <apex:commandButton action="{!cancel}" value="Go Back"  />
+           <br/>
+            <br/>
+   <apex:pageBlock title="To List - Preview">
+        <apex:pageBlockTable value="{!toLst}" var="displayToInfoWrapper">
+            <apex:column value="{!displayToInfoWrapper.ownername}">
+            <apex:facet name="header" > Owner Name </apex:facet> </apex:column>
+
+            <apex:column value="{!displayToInfoWrapper.fullname}">
+             <apex:facet name="header" > Full Name </apex:facet> </apex:column>
+            <apex:column value="{!displayToInfoWrapper.email}">
+            <apex:facet name="header" > Email </apex:facet> </apex:column>
+            <apex:column >
+                <apex:facet name="header" > Is Community User Active?</apex:facet> 
+                <apex:inputCheckbox disabled="true" value="{!displayToInfoWrapper.IsCommunityUserActive}" />
+            </apex:column>
+            <apex:column value="{!displayToInfoWrapper.LastLogin}">
+                <apex:facet name="header" > Last Login</apex:facet> 
+            </apex:column>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+   <apex:pageBlock title="CC List - Preview">
+        <apex:pageBlockTable value="{!ccLst}" var="displayCCInfoWrapper">
+            <apex:column value="{!displayCCInfoWrapper.ownername}">
+            <apex:facet name="header" > Owner Name </apex:facet> </apex:column>
+
+            <apex:column value="{!displayCCInfoWrapper.fullname}">
+            <apex:facet name="header" > Full Name </apex:facet> </apex:column>
+            <apex:column value="{!displayCCInfoWrapper.email}">
+            <apex:facet name="header" > Email </apex:facet> </apex:column>
+            <apex:column >
+                <apex:facet name="header" > Is Community User Active?</apex:facet> 
+                <apex:inputCheckbox disabled="true" value="{!displayCCInfoWrapper.IsCommunityUserActive}" />
+            </apex:column>
+            <apex:column value="{!displayCCInfoWrapper.LastLogin}">
+                <apex:facet name="header" > Last Login</apex:facet> 
+            </apex:column>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+
+   
+
+   </apex:form>
+      
+ <apex:sectionHeader title="Run Mass Email Batch Job" rendered="{!!isPreview}" id="massEmailSection"/>
+ 
+    <apex:pageMessages rendered="{!!isPreview}"/>
+   
+   
+ <apex:form rendered="{!!isPreview}" id="jobs">
+  
+  <br/>
+  
+  <apex:pageBlock id="idMassEmailBatch" mode="edit">
+    
+            
+    <div align="left" draggable="false" >
+       <br/>
+       <apex:commandButton value="Start Mass Email Batch" status="startBatchConfirmationMsg"  action="{!startBatchConfirmation}" rendered="{!showStartBatchButton }"  reRender="jobs,error" /> 
+        <apex:actionStatus id="startBatchConfirmationMsg" >
+                <apex:facet name="start" >
+                  <img src="/img/loading.gif" />                    
+                </apex:facet>
+            </apex:actionStatus>
+    </div>
+    <div align="left" draggable="false" >
+       <apex:outputText rendered="{!showConfirmBatchButton }">This action will initiate the batch job to send out email to all the recipients selected below. Are you sure you want to continue with this action?</apex:outputText>
+       
+       <br/><apex:commandButton value="Yes" action="{!startBatch}" status="startBatchProcess" rendered="{!showConfirmBatchButton }"  reRender="jobs,error,massEmailSection" /> 
+        <apex:actionStatus id="startBatchProcess" >
+                <apex:facet name="start" >
+                  <img src="/img/loading.gif" />                    
+                </apex:facet>
+            </apex:actionStatus>
+            <apex:outputText rendered="{!(!showConfirmBatchButton && !showStartBatchButton && !hasErrors) }">
+                Mass Email Batch Initiated. To view email activity records, click on 'Reports' tab and run 'All Activity Records' report from folder 'CA Program Misc. Reports'.
+            </apex:outputText>
+    </div>
+    <br/>        
+
+   <apex:commandButton action="{!cancel}" value="Go Back"  />
+       <br/> <br/>
+      <apex:pageBlock id="block1" title="{!toListPBTitle}"  >   
+      
+   <apex:inputCheckbox label="Check/Uncheck All" title="Check/Uncheck All" selected="true"  onclick="updateToLstCheckboxes(this)"/>
+   <apex:outputText > <font color="blue"> Select/deselect email addresses before clicking on 'Start Mass Email Batch' button. Click on 'Go Back' if you do not want to send mass emails. </font></apex:outputText>
+                        
+        <apex:pageBlockTable value="{!toLst}" var="displayToInfoWrapper">
+           <!-- <apex:column value="{!displayToInfoWrapper.selected}">
+            <apex:facet name="header" >Send Email</apex:facet> </apex:column> -->
+       <apex:column >
+
+        <apex:inputCheckbox id="toLstChkBox"  value="{!displayToInfoWrapper.selected}"/>
+       </apex:column>
+
+            <apex:column value="{!displayToInfoWrapper.ownername}">
+            <apex:facet name="header" > Owner Name </apex:facet> </apex:column>
+
+            <apex:column value="{!displayToInfoWrapper.fullname}">
+            <apex:facet name="header" > Full Name </apex:facet> </apex:column>
+            <apex:column value="{!displayToInfoWrapper.email}">
+            <apex:facet name="header" > Email </apex:facet> </apex:column>
+            <apex:column >
+                <apex:facet name="header" > Is Community User Active?</apex:facet> 
+                <apex:inputCheckbox disabled="true" value="{!displayToInfoWrapper.IsCommunityUserActive}" />
+            </apex:column>
+            <apex:column value="{!displayToInfoWrapper.LastLogin}">
+                <apex:facet name="header" > Last Login</apex:facet> 
+            </apex:column>
+        </apex:pageBlockTable>
+     </apex:pageBlock> 
+     <apex:pageBlock id="block2" title="{!ccListPBTitle}"  >  
+   <apex:inputCheckbox label="Check/Uncheck All" title="Check/Uncheck All" selected="true"  onclick="updateCCLstCheckboxes(this)"/>
+   <apex:outputText > <font color="blue"> Select/deselect email addresses before clicking on 'Start Mass Email Batch' button. Click on 'Go Back' if you do not want to send mass emails. </font></apex:outputText>
+          
+     <!-- <apex:pageblockSection id="section2" columns="1" collapsible="true" title="CC List"> -->
+        <apex:pageBlockTable value="{!ccLst}" var="displayCCInfoWrapper">
+            <apex:column >
+
+        <apex:inputCheckbox id="ccLstChkBox" label="ccLstChkBox" value="{!displayCCInfoWrapper.selected}"/>
+ </apex:column>
+             <apex:column value="{!displayCCInfoWrapper.ownername}">
+            <apex:facet name="header" > Owner Name </apex:facet> </apex:column>
+
+            <apex:column value="{!displayCCInfoWrapper.fullname}">
+             <apex:facet name="header" > Full Name </apex:facet> </apex:column>
+            <apex:column value="{!displayCCInfoWrapper.email}">
+             <apex:facet name="header" > Email </apex:facet> </apex:column>
+             <apex:column >
+                <apex:facet name="header" > Is Community User Active?</apex:facet> 
+                <apex:inputCheckbox disabled="true" value="{!displayCCInfoWrapper.IsCommunityUserActive}" />
+            </apex:column>
+            <apex:column value="{!displayCCInfoWrapper.LastLogin}">
+            <apex:facet name="header" > Last Login</apex:facet> </apex:column>
+        </apex:pageBlockTable>
+             <!--   </apex:pageblockSection> -->
+             <!--   <font color="#FF0000">
+      <script> window.twistSection(document.getElementById('{!$Component.block1.section2}').getElementsByTagName('img')[0]); </script>
+ </font> -->
+    </apex:pageBlock>
+    <br/>    
+  </apex:pageBlock>
+
+    <br/>
+  <c:BatchJobs id="jobs" numberOfJob="10"/>
+ </apex:form>
+</apex:page>

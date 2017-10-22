@@ -1,0 +1,223 @@
+<apex:page standardController="Root_Case__c" 
+   showHeader="false" readOnly="true" sidebar="false" cache="false" tabStyle="Case" standardStylesheets="true">
+
+      <table width="98%" border="0" cellpadding="0" cellspacing="0">
+          <tr><td align="right"><a href="javascript:window.print();">Print this page</a></td></tr>   
+      </table>
+      
+      <apex:sectionHeader title="" subtitle="Mozilla - CA Program" />
+      
+      <!-- Display parent record -->             
+      
+      <apex:pageBlock title="Root Case Information">         
+        <apex:pageBlockSection columns="2">
+           <apex:outputField value="{!Root_Case__c.Case_No__c}"/> 
+           <apex:outputField value="{!Root_Case__c.Request_Status__c}"/>
+           <apex:outputField value="{!Root_Case__c.Name}"/> 
+           <apex:outputText value="" />
+           <apex:outputField value="{!Root_Case__c.Root_Certificate_Name__c}"/>
+           <!-- <apex:outputField value="{!Root_Case__c.All_Fields_Verified__c}"/> -->     
+        </apex:pageBlockSection> 
+      </apex:pageBlock> 
+      
+       <!--
+      <apex:pageBlock title="Included Root Certificate Information">         
+        <apex:pageBlockSection columns="2"> 
+           <apex:outputField value="{!Root_Case__c.CA_Owner_Name_Existing__c}"/> 
+           <apex:outputField value="{!Root_Case__c.Root_Certificate_Name_Existing__c}"/>          
+        </apex:pageBlockSection> 
+      </apex:pageBlock>  
+      
+     
+      <apex:pageBlock title="Additional Root Case Information">         
+        <apex:pageBlockSection columns="2"> 
+           <apex:outputField value="{!Root_Case__c.Subject__c}"/> 
+           <apex:outputField value="{!Root_Case__c.Date_Time_Opened__c}" /> 
+           <apex:outputText value=""/>
+           <apex:outputField value="{!Root_Case__c.Date_Time_Closed__c}" /> 
+        </apex:pageBlockSection> 
+      </apex:pageBlock> 
+      -->
+                <apex:pageBlock title="Certificate Data">         
+               <apex:pageBlockSection columns="1">    
+                   <apex:outputField value="{!Root_Case__c.Certificate_Issuer_Common_Name__c}"/>                       
+                   <apex:outputField value="{!Root_Case__c.O_From_Issuer_Field__c}"/>
+                   <apex:outputField value="{!Root_Case__c.OU_From_Issuer_Field__c}"/> 
+                   <apex:outputText label="Valid From" value="{!Root_Case__c.Valid_From_YYYY_MMM_DD__c}"/>
+                   <apex:outputText label="Valid To" value="{!Root_Case__c.Valid_To_YYYY_MMM_DD__c}"/> 
+                   <apex:outputField value="{!Root_Case__c.Certificate_Serial_Number__c}"/> 
+                   <apex:outputField value="{!Root_Case__c.Subject__c}"/> 
+                   <apex:outputField value="{!Root_Case__c.Signature_Hash_Algorithm__c}"/>
+                   <apex:outputField value="{!Root_Case__c.Public_Key_Algorithm__c}"/>
+                   <apex:outputField value="{!Root_Case__c.SHA_1_Fingerprint__c}"/>
+                   <apex:outputField value="{!Root_Case__c.SHA_256_Fingerprint__c}"/>    
+                   <apex:outputField value="{!Root_Case__c.Certificate_Fingerprint__c}"/>
+                   <apex:outputField value="{!Root_Case__c.Certificate_Version__c}"/>
+                 </apex:pageBlockSection>
+               </apex:pageBlock>   
+
+               <apex:pageBlock title="Technical Information about Root Certificate">         
+               <apex:pageBlockSection columns="2">                             
+                   <apex:outputField value="{!Root_Case__c.Certificate_Summary__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.Certificate_Summary_Verified__c}"/>
+                   <apex:outputText value="{!Root_Case__c.Root_Certificate_Download_URL__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.Root_Certificate_Download_URL_Verified__c}"/>                                  
+                   <!-- 
+                   <apex:outputField value="{!Root_Case__c.Certificate_Version__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.Certificate_Version_Verified__c}"/>
+                   <apex:outputField value="{!Root_Case__c.Signing_Key_Parameters__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.Signing_Key_Parameters_Verified__c}"/>
+                   -->
+                   <apex:outputField value="{!Root_Case__c.CRL_URL_s__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.CRL_URL_Verified__c}"/>
+                   <apex:outputField value="{!Root_Case__c.OCSP_URL_s__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.OCSP_URL_Verified__c}"/>                                    
+                   <apex:outputField value="{!Root_Case__c.Trust_Bits__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.Trust_Bits_Verified__c}"/>
+                   <apex:outputField value="{!Root_Case__c.SSL_Validation_Type__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.SSL_Validation_Type_Verified__c}"/>
+                   <apex:outputField value="{!Root_Case__c.EV_Policy_OID_s__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.EV_Policy_OID_s_Verified__c}"/>
+                   <apex:outputField value="{!Root_Case__c.Root_Stores_Included_In__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.Root_Stores_Included_In_Verified__c}"/>
+                   <apex:outputField value="{!Root_Case__c.Mozilla_Applied_Constraints__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.Mozilla_Applied_Constraints_Verified__c}"/>         
+                </apex:pageBlockSection>
+              </apex:pageBlock>
+
+               <apex:pageBlock title="Test Websites or Example Cert">         
+               <apex:pageBlockSection columns="2">  
+                   <!-- Deprecated <apex:outputText value="{!Root_Case__c.Test_Website_URL_SSL_or_Example_Cert__c}"/> -->
+                   <apex:outputText value="{!Root_Case__c.Test_Website_Valid__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.TestWebsiteURLSSLorExCert_Verified__c}"/>                           
+                   <apex:outputText value="{!Root_Case__c.Test_Website_Expired__c}"/> 
+                   <apex:outputText value=" " />
+                   <apex:outputText value="{!Root_Case__c.Test_Website_Revoked__c}"/>  
+                   <apex:outputText value=" " /> 
+                   <apex:outputText value="{!Root_Case__c.Example_Cert__c}"/>  
+                   <apex:outputText value=" " /> 
+                   <apex:outputText value="{!Root_Case__c.Test_Notes__c}"/>  
+                   <apex:outputText value=" " />             
+                </apex:pageBlockSection>
+               </apex:pageBlock> 
+                              
+              <apex:pageBlock title="Test Results (When Requesting the SSL/TLS Trust Bit)">         
+                 <apex:pageBlockSection columns="2">
+                   <apex:outputField value="{!Root_Case__c.Revocation_Tested__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.Revocation_Tested_Verified__c}"/>                   
+                   <apex:outputField value="{!Root_Case__c.CA_Browser_Forum_Lint_Test__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.CA_Browser_Forum_Lint_Test_Verified__c}"/>
+                   <apex:outputField value="{!Root_Case__c.Test_Website_Lint_Test__c}"/>    
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.Test_Website_Lint_Test_Verified__c}"/>                    
+                   <apex:outputField value="{!Root_Case__c.EV_Tested__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.EV_Tested_Verified__c}"/>                                                   
+                 </apex:pageBlockSection>
+               </apex:pageBlock>
+               
+               <!--
+               <apex:pageBlock title="Digital Fingerprint Information">         
+                 <apex:pageBlockSection columns="2">  
+                   <apex:outputField value="{!Root_Case__c.SHA_1_Fingerprint__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.SHA_1_Fingerprint_Verified__c}"/>
+                   <apex:outputField value="{!Root_Case__c.SHA_256_Fingerprint__c}"/>    
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.SHA_256_Fingerprint_Verified__c}"/>                                  
+                 </apex:pageBlockSection>
+               </apex:pageBlock>
+               -->
+               
+               <apex:pageBlock title="CA Hierarchy Information">         
+                 <apex:pageBlockSection columns="2">              
+                   <apex:outputField value="{!Root_Case__c.CA_Hierarchy__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.CA_Hierarchy_Verified__c}"/>
+                   <apex:outputField value="{!Root_Case__c.Externally_Operated_SubCAs__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.Externally_Operated_SubCAs_Verified__c}"/>
+                   <apex:outputField value="{!Root_Case__c.Cross_Signing__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.Cross_Signing_Verified__c}"/>
+                   <apex:outputField value="{!Root_Case__c.Technical_Constraint_on_3rd_party_Issuer__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.Tech_Cons_on_3rd_party_Iss_Verified__c}"/>
+                </apex:pageBlockSection>
+               </apex:pageBlock>
+               
+               <apex:pageBlock title="Verification Policies and Practices">         
+                 <apex:pageBlockSection columns="2">
+                   <apex:outputField value="{!Root_Case__c.Policy_Documentation__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.Policy_Documentation_Verified__c}"/> 
+                   <apex:outputField value="{!Root_Case__c.CA_Document_Repository__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.CA_Document_Repository_Verified__c}"/> 
+                   <apex:outputField value="{!Root_Case__c.CP_Doc_Language__c}"/>
+                   <apex:outputText value=""/>                                    
+                   <apex:outputText value="{!Root_Case__c.CP__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.CP_Verified__c}"/>
+                   <apex:outputField value="{!Root_Case__c.CP_Doc_Language__c}"/>
+                   <apex:outputText value=""/>
+                   <apex:outputText value="{!Root_Case__c.CPS__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.CPS_Verified__c}"/>
+                   <apex:outputField value="{!Root_Case__c.Other_Relevant_Documents__c}"/>   
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.Other_Relevant_Documents_Verified__c}"/> 
+                   <apex:outputField value="{!Root_Case__c.Auditor_Name__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.Auditor_Name_Verified__c}"/>
+                   <apex:outputField value="{!Root_Case__c.Auditor_Website__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.Auditor_Website_Verified__c}"/>
+                   <apex:outputField value="{!Root_Case__c.Auditor_Qualifications__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.Auditor_Qualifications_Verified__c}"/>
+                   <apex:outputField value="{!Root_Case__c.Standard_Audit__c}"/> 
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.Standard_Audit_Verified__c}"/> 
+                   <apex:outputField value="{!Root_Case__c.Standard_Audit_Type__c}"/> 
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.Standard_Audit_Type_Verified__c}"/> 
+                   <apex:outputField value="{!Root_Case__c.Standard_Audit_Statement_Date__c}"/> 
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.Standard_Audit_Statement_Dt_Verified__c}"/> 
+                   <apex:outputField value="{!Root_Case__c.BR_Audit__c}"/> 
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.BR_Audit_Verified__c}"/> 
+                   <apex:outputField value="{!Root_Case__c.BR_Audit_Type__c}"/> 
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.BR_Audit_Type_Verified__c}"/>  
+                   <apex:outputField value="{!Root_Case__c.BR_Audit_Statement_Date__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.BR_Audit_Statement_Date_Verified__c}"/>
+                   <apex:outputField value="{!Root_Case__c.EV_Audit__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.EV_Audit_Verified__c}"/>
+                   <apex:outputField value="{!Root_Case__c.EV_Audit_Type__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.EV_Audit_Type_Verified__c}"/>
+                   <apex:outputField value="{!Root_Case__c.EV_Audit_Statement_Date__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.EV_Audit_Statement_Date_Verified__c}"/>
+                   <apex:outputField value="{!Root_Case__c.BR_Commitment_to_Comply__c}"/>  
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.BR_Commitment_to_Comply_Verified__c}"/>                  
+                   <apex:outputField value="{!Root_Case__c.BR_Self_Assessment__c}"/>  
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.BR_Self_Assessment_Verified__c}"/>                  
+                   <apex:outputField value="{!Root_Case__c.SSL_Verification_Procedures__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.SSL_Verification_Procedures_Verified__c}"/>
+                   <apex:outputField value="{!Root_Case__c.EV_SSL_Verification_Procedures__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.EV_SSL_Verification_Proc_Verified__c}"/>
+                   <apex:outputField value="{!Root_Case__c.Organization_Verification_Procedures__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.Org_Verification_Procedure_Verified__c}"/> 
+                   <apex:outputField value="{!Root_Case__c.Email_Address_Verification_Procedures__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.Email_Addr_Verification_Proc_Verified__c}"/>  
+                   <apex:outputField value="{!Root_Case__c.Code_Signing_Subscriber_Verification_Pro__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.Code_Signing_Subs_Verif_Proc_Verified__c}"/>  
+                   <apex:outputField value="{!Root_Case__c.Multi_Factor_Authentication__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.Multi_Factor_Authentication_Verified__c}"/>  
+                   <apex:outputField value="{!Root_Case__c.Network_Security__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.Network_Security_Verified__c}"/>                                       
+                </apex:pageBlockSection>
+               </apex:pageBlock>
+               
+               <apex:pageBlock title="Software Release Information">         
+               <apex:pageBlockSection columns="2">
+                   <apex:outputField value="{!Root_Case__c.NSS_Release_When_First_Included__c}"/>
+                   <apex:outputField value="{!Root_Case__c.NSS_Release_When_First_Included__c}"/>               
+               </apex:pageBlockSection>
+               </apex:pageBlock>               
+               <!-- Deprecated 
+               <apex:pageBlock title="Link to Publicly Disclosed and Audited subordinate CA Certificates">         
+               <apex:pageBlockSection columns="2">
+                   <apex:outputText value="{!Root_Case__c.Publicly_Disclosed_and_Audited_subCAs__c}"/>
+                   <apex:outputField label="Verified?" value="{!Root_Case__c.Publ_Discl_Audited_subCAs_Verified__c}"/>               
+               </apex:pageBlockSection>
+               </apex:pageBlock>
+               --> 
+   
+<style type="text/css">
+    .pbTitle {white-space: nowrap}
+    .pbSection {word-wrap: break-word}
+    .rootHeader {font-size: 25px; background-color:white; font-weight: bold; width=100px}
+</style>   
+        
+</apex:page>

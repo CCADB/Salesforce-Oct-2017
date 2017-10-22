@@ -1,0 +1,186 @@
+<apex:page standardController="Case" extensions="JixiServiceController" sidebar="true">
+    <!--
+    //TODO:
+    //1. Prepare request using Case Id and "CCADB_JIXI_ServiceRequest"
+    //2. Do a callout to External Jixi Server
+    //3. Get a Response
+    //4. If error display messages on Screen
+    //5. Provide necessary actions to User
+    //6. Provide Loading Dialog and processing bar on the screen
+    -->
+    <apex:form id="theForm">
+        
+        <script type="text/javascript">
+            
+            window.onload = function(){
+                var errorFlag = "{!hasErrors}";
+                console.log('errorFlag: '+errorFlag);
+                if(errorFlag == 'false'){
+                    console.log(errorFlag);
+                    startJixiService();
+                }
+            }
+        </script>
+        
+        <apex:actionStatus id="status">
+            
+            <apex:facet name="start">
+            
+            <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.2; z-index: 999999; background-color: #000;">
+                &nbsp;
+            </div>
+            <div style="position: fixed; left: 0; top: 0; bottom: 0; right: 0; z-index: 1001; margin: 15% 40%">
+                <div style="display: inline-block; padding: 2px; background-color: #fff; width: 300px;">
+                    <img src="/img/loading32.gif" style="float: left; margin: 10% 40%;"/>
+                    <span style="display: inline-block; padding: 12px 0px;">{!statusText}</span>
+                </div>
+            </div>
+            </apex:facet>
+        </apex:actionStatus>
+        
+     
+       <apex:pageBlock title="Processing Error ...." rendered="{!lstRootCases.size == 0}">
+           <apex:outputText value="Cannot proceed with 'Audit Letter Validation' process. Please add one or more Root Cases for each root certificate that is covered by the audit statements."/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+           <apex:commandButton value="Go Back" id="redirectToCaseButton"  action="{!cancel}"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       </apex:pageBlock>
+     
+        <apex:pageBlock id="theBlock" title="Audit Letter Valdation Integration" rendered="{!lstRootCases.size > 0}">      
+        
+            <apex:pageBlockSection columns="1" title="Initialize request">       
+                <apex:outputText style="color: blue;" value="Initialize webservice callout call ..."></apex:outputText>  
+                <apex:actionFunction name="startJixiService" action="{!prepareRequest}" oncomplete="doCallout();" reRender="theForm, theBlock" status="status"/>
+            </apex:pageBlockSection>  
+          
+            <apex:pageBlockSection columns="1" title="Prepare request">       
+      
+            <apex:outputText style="color: blue;" value="Using Case and Root Case fields ..."></apex:outputText>
+                 
+                <!--<apex:outputField value="{!Case.CaseNumber}"/>-->
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Case Number</apex:outputLabel>
+                    <apex:outputLink value="/{!Case.id}" target="_blank">{!Case.CaseNumber}</apex:outputLink>
+                </apex:pageBlockSectionItem>
+               
+     
+                <apex:outputField value="{!Case.Account.Name}"/>
+                <apex:outputField value="{!Case.Auditor_New__c}"/>           
+            
+                <apex:outputField value="{!Case.Standard_Audit_Statement_Link__c}"/>
+                <apex:outputField value="{!Case.Standard_Audit_Type__c}"/>
+                <apex:outputField value="{!Case.Standard_Audit_Statement_Date__c}"/>
+                <apex:outputField value="{!Case.Standard_Audit_Period_Start_Date__c}"/>
+                <apex:outputField value="{!Case.Standard_Audit_Period_End_Date__c}"/>               
+                       
+                <apex:outputField value="{!Case.BR_Audit_Statement_Link__c}"/> 
+                <apex:outputField value="{!Case.BR_Audit_Type__c}"/>
+                <apex:outputField value="{!Case.BR_Audit_Statement_Date__c}"/>
+                <apex:outputField value="{!Case.BR_Audit_Period_Start_Date__c}"/>
+                <apex:outputField value="{!Case.BR_Audit_Period_End_Date__c}"/>
+                           
+                <apex:outputField value="{!Case.EV_Audit_Statement_Link__c}"/>
+                <apex:outputField value="{!Case.EV_Audit_Type__c}"/>
+                <apex:outputField value="{!Case.EV_Audit_Statement_Date__c}"/>
+                <apex:outputField value="{!Case.EV_Audit_Period_Start_Date__c}"/>
+                <apex:outputField value="{!Case.EV_Audit_Period_End_Date__c}"/>
+                
+                <apex:outputField value="{!Case.EV_Code_Signing_Audit_Statement_Link__c}"/>                   
+                <apex:outputField value="{!Case.EV_Code_Signing_Audit_Type__c}"/>
+                <apex:outputField value="{!Case.EV_Code_Signing_Audit_Statement_Date__c}"/>
+                <apex:outputField value="{!Case.EV_Code_Signing_Audit_Period_Start_Date__c}"/>
+                <apex:outputField value="{!Case.EV_Code_Signing_Audit_Period_End_Date__c}"/>
+                                               
+                <apex:repeat value="{!lstRootCases}" var="rootCase" >                   
+                        <!--<apex:outputField value="{!rootCase.Name}"/>-->
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel >Root Case No</apex:outputLabel>
+                            <apex:outputLink value="/{!rootCase.Id}" target="_blank">{!rootCase.Name}</apex:outputLink>
+                        </apex:pageBlockSectionItem>
+                        <apex:outputField value="{!rootCase.SHA_1_Fingerprint__c}"/>
+                        <apex:outputField value="{!rootCase.SHA_256_Fingerprint__c}"/>
+                        <apex:outputField value="{!rootCase.Microsoft_Trust_Bits__c}"/>
+                        <apex:outputField value="{!rootCase.Microsoft_EV_Enabled__c}"/>                   
+                </apex:repeat>            
+            
+            </apex:pageBlockSection>     
+            
+            <apex:pageBlockSection columns="1" title="Click on the arrow to see HTTPS request" id="theRequestSection" collapsible="true">
+                   
+                <apex:outputText style="color: blue;" value="JSON request to Audit Letter Validation service..."></apex:outputText> 
+                <apex:outputText >{!request}</apex:outputText>
+                <apex:actionFunction name="doCallout" action="{!doCallout}" oncomplete="postCallActions();" reRender="theForm, theBlock" status="status"/>
+                <apex:actionFunction name="postCallActions" action="{!postCallActions}" reRender="theForm, theBlock, theSection" status="status"/>
+                
+            </apex:pageBlockSection>  
+           
+            <script>
+                twistSection(document.getElementById('{!$Component.theBlock.theRequestSection}').getElementsByTagName('img')[0])
+            </script>
+                       
+            <apex:pageBlockSection columns="1" title="Click on the arrow to see HTTPS response" id="theResponseSection" collapsible="true">       
+                <apex:actionFunction name="postCallActions" action="{!postCallActions}" reRender="theForm, theBlock" status="status"/>   
+                <apex:outputText style="color: blue;" value="JSON response from Audit Letter Validation service ..."></apex:outputText> 
+                <apex:outputText >{!response}</apex:outputText>
+           </apex:pageBlockSection>  
+           
+           <script>
+                twistSection(document.getElementById('{!$Component.theBlock.theResponseSection}').getElementsByTagName('img')[0])
+           </script>                    
+                       
+            <apex:pageBlockSection columns="1" title="Parse response and update" id="theSection">
+            
+                 <apex:outputText style="color: blue;" value="Updated Case and Root Case fields from JSON response..."></apex:outputText>
+                 
+                 <!--<apex:outputField value="{!caseSO.CaseNumber}"/>-->
+                 <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Case Number</apex:outputLabel>
+                    <apex:outputLink value="/{!Case.id}" target="_blank">{!Case.CaseNumber}</apex:outputLink>
+                 </apex:pageBlockSectionItem>
+                 
+                 <apex:outputField value="{!caseSO.Standard_Audit_Auto_Review_Status__c}"/>
+                 <apex:outputField value="{!caseSO.Standard_Audit_Auto_Review_Results__c}"/>
+                 <apex:outputField value="{!caseSO.BR_Audit_Auto_Review_Status__c}"/>
+                 <apex:outputField value="{!caseSO.BR_Audit_Auto_Review_Results__c}"/>
+                 <apex:outputField value="{!caseSO.EV_SSL_Audit_Auto_Review_Status__c}"/>
+                 <apex:outputField value="{!caseSO.EV_SSL_Audit_Auto_Review_Results__c}"/>
+                 <apex:outputField value="{!caseSO.EV_Code_Signing_Audit_AutoReviewStatus__c}"/>
+                 <apex:outputField value="{!caseSO.EV_Code_Signing_Audit_AutoReviewResults__c}"/>
+                 
+                 <apex:repeat value="{!lstRootCases}" var="rootCase" >
+                       <!--<apex:outputField value="{!rootCase.Name}"/>-->
+                       <apex:pageBlockSectionItem >
+                            <apex:outputLabel >Root Case No</apex:outputLabel>
+                            <apex:outputLink value="/{!rootCase.Id}" target="_blank">{!rootCase.Name}</apex:outputLink>
+                        </apex:pageBlockSectionItem>
+                        
+                       <apex:outputField value="{!rootCase.Root_Certificate_Name_Existing__c}"/>
+                       <apex:outputField value="{!rootCase.Auto_Review_Status__c}"/>
+                       <apex:outputField value="{!rootCase.Auto_Review_Results__c}"/> 
+                 </apex:repeat>
+                
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection columns="1" title="Click on the arrow to see error logs from Audit Letter Validation process" id="theErrorSection" collapsible="true">
+            
+                 <apex:outputText style="color: blue;" value="Audit Letter Validation Errors"></apex:outputText>                 
+                 <apex:repeat value="{!lstErrorLog}" var="errorLog">                    
+                     <apex:outputText escape="false" value="{!errorLog}"></apex:outputText>
+                 </apex:repeat>
+            
+            </apex:pageBlockSection>
+            
+            <script>
+                twistSection(document.getElementById('{!$Component.theBlock.theErrorSection}').getElementsByTagName('img')[0])
+            </script>
+            
+            <apex:pageBlockSection columns="1" title="Done">           
+            </apex:pageBlockSection>
+             
+             <apex:pageBlockButtons location="bottom">
+                <apex:commandButton value="Go Back" action="{!cancel}"/>
+             </apex:pageBlockButtons>
+            
+        </apex:pageBlock>
+        
+    </apex:form>
+</apex:page>

@@ -1,0 +1,78 @@
+<apex:page controller="AuditorQualificationsReportController" showHeader="false" sideBar="false" cache="true" expires="3600" readOnly="true">
+ 
+     <apex:pagemessages />
+
+     <apex:sectionHeader title="Auditor Qualifications Report"/>
+    
+    <style>
+         tr.dataRow {
+           background-color:white;
+         }
+         tr.dataRow:hover {
+           background-color: #e3f3ff;
+         };
+         td.datacell {
+         border-right-width:1px;
+         };
+         .bPageBlock {
+           padding-left:50px !important;
+         };
+     </style>
+
+<div class="apexp" style="padding-left:40px; padding-right:50px; width:100%;">
+    <div id="pageBlockBody"  class="bPageBlock brandSecondaryBrd apexDefaultPageBlock secondaryPalette">
+        <div class="pbHeader">
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tbody><tr><td class="pbTitle"><h2 class="mainTitle">As of {!currentDate}</h2></td><td>&nbsp;</td></tr></tbody>
+            </table>
+       </div>
+     <div class="pbBody">
+     <table class="list " border="0" cellpadding="0" cellspacing="0" style="table-layout:fixed;" > 
+           <tr class="headerRow">
+              <th class="headerRow" style="width:1%;white-space:pre-wrap;"   >Auditor</th>
+              <th class="headerRow" style="width:1%;white-space:pre-wrap;"   >Auditor Website</th>
+              <th class="headerRow" style="width:.5%;white-space:pre-wrap;"  >Auditor Location</th>            
+              <th class="headerRow" style="width:2%;white-space:pre-wrap;"   >Auditor Qualifications</th>
+              <th class="headerRow" style="width:2%;white-space:pre-wrap;"   >Public Comments on Auditor Location</th>
+           </tr>
+           <apex:repeat value="{!auditorAndLocationSoLst}"  var="a"> 
+           <tr class="dataRow">
+           
+             <td class="datacell" style="border-right-width:1px;word-wrap:break-word;">
+                <apex:outputPanel > 
+                    <apex:outputField value="{!a.Auditor__r.Name}"> </apex:outputField>
+                </apex:outputPanel>
+              </td>
+              
+              <td class="datacell" style="border-right-width:1px;word-wrap:break-word;">
+                <apex:outputPanel > 
+                    <apex:outputField value="{!a.Auditor__r.Auditor_Website__c}"> </apex:outputField>
+                </apex:outputPanel>
+              </td>
+              
+              <td class="datacell" style="border-right-width:1px;word-wrap:break-word;">
+                <apex:outputPanel > 
+                    <apex:outputField value="{!a.Name}"> </apex:outputField>
+                </apex:outputPanel>
+              </td>
+              
+              <td class="datacell" style="border-right-width:1px;word-wrap:break-word;">
+                <apex:outputPanel > 
+                    <apex:outputField value="{!a.Auditor_Qualifications__c}"> </apex:outputField>
+                </apex:outputPanel>
+              </td>
+                            
+              
+              <td class="datacell" style="border-right-width:1px;word-wrap:break-word;">
+                <apex:outputPanel > 
+                    <apex:outputField value="{!a.Comments__c}"> </apex:outputField>
+                </apex:outputPanel>
+              </td> 
+                          
+
+           </tr>
+           </apex:repeat>
+       </table>
+   </div><div class="pbFooter secondaryPalette"><div class="bg"></div></div></div></div>
+
+ </apex:page>

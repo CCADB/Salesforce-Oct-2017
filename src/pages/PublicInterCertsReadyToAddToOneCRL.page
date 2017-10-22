@@ -1,0 +1,85 @@
+<apex:page controller="PublicInterCertsReadyToAddToOneCRLCtlr" showHeader="false" sideBar="false" cache="true" expires="3600" readOnly="true">
+    <br/> 
+     <apex:pagemessages />
+
+     <apex:sectionHeader title="Public Intermediate Certs Ready To Add To OneCRL"/>
+    
+    <style>
+         tr.dataRow {
+           background-color:white;
+         }
+         tr.dataRow:hover {
+           background-color: #e3f3ff;
+         };
+         td.datacell {
+         border-right-width:1px;
+         };
+         .bPageBlock {
+         padding-left:50px !important;
+         };
+     </style>
+
+<div class="apexp" style="padding-left:40px;padding-right:50px;width:340%;">
+    <div id="pageBlockBody" class="bPageBlock brandSecondaryBrd apexDefaultPageBlock secondaryPalette">
+        <div class="pbHeader">
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tbody><tr><td class="pbTitle"><h2 class="mainTitle">As Of {!currentDate}</h2></td><td>&nbsp;</td></tr></tbody>
+            </table>
+       </div>
+     <div class="pbBody">
+     <table class="list " border="0" cellpadding="0" cellspacing="0" style="table-layout:fixed;">
+           <tr class="headerRow" >
+              <th class="headerRow" style="width:1.7%;white-space:pre-wrap;word-wrap:break-word;">CA Owner</th>
+              <th class="headerRow" style="width:0.5%;white-space:pre-wrap;word-wrap:break-word;">Revocatio Status</th>
+              <th class="headerRow" style="width:1%;white-space:pre-wrap;word-wrap:break-word;">RFC 5280 Revocation Reason Code</th>
+              <th class="headerRow" style="width:0.75%;white-space:pre-wrap;word-wrap:break-word;">Date of Revocation</th>
+              <!-- <th class="headerRow" style="width:0.75%;white-space:pre-wrap;word-wrap:break-word;">OneCRL Status</th> -->
+              <th class="headerRow" style="width:1.7%;white-space:pre-wrap;word-wrap:break-word;">OneCRL Bug Number</th>   
+              <th class="headerRow" style="width:1.7%;white-space:pre-wrap;word-wrap:break-word;">Certificate Serial Number</th>
+              <th class="headerRow" style="width:1.5%;white-space:pre-wrap;word-wrap:break-word;">CA Owner/Certificate Name</th>
+              <th class="headerRow" style="width:1.5%;white-space:pre-wrap;">Certificate Issuer Common Name</th>
+              <th class="headerRow" style="width:1.5%;white-space:pre-wrap;">Certificate Issuer Organization</th>
+              <th class="headerRow" style="width:1.5%;white-space:pre-wrap;">Certificate Subject Common Name</th>
+              <th class="headerRow" style="width:1.5%;white-space:pre-wrap;">Certificate Subject Organization</th>
+              <th class="headerRow" style="width:3%;white-space:pre-wrap;">SHA-256 Fingerprint</th>
+              <th class="headerRow" style="width:3%;white-space:pre-wrap;">Certificate ID</th>
+              <th class="headerRow" style="width:0.75%;white-space:pre-wrap;">Valid From [GMT]</th>
+              <th class="headerRow" style="width:0.75%;white-space:pre-wrap;">Valid To [GMT]</th>
+              <th class="headerRow" style="width:0.75%;white-space:pre-wrap;">Public Key Algorithm</th>
+              <th class="headerRow" style="width:1.2%;white-space:pre-wrap;">Signature Hash Algorithm</th>
+              <th class="headerRow" style="width:1.5%;white-space:pre-wrap;">CRL URL(s)</th>
+              <th class="headerRow" style="width:1.5%;white-space:pre-wrap;">Alternate CRL</th>
+              <th class="headerRow" style="width:1.5%;white-space:pre-wrap;">OCSP URL(s)</th>
+              <th class="headerRow" style="width:1.5%;white-space:pre-wrap;">Comments</th>
+           </tr>
+           <apex:repeat value="{!accountHierarchySoLst}"  var="accountSo"> 
+           <tr class="dataRow">             
+              <td class="datacell" style="border-right-width:1px;word-wrap:break-word;">{!accountSo.CA_Owner__c}</td>
+              <td class="datacell" style="border-right-width:1px;word-wrap:break-word;">{!accountSo.Revocation_Status__c}</td>               
+              <td class="datacell" style="border-right-width:1px;word-wrap:break-word;">{!accountSo.RFC_5280_Revocation_Reason_Code__c}</td> 
+              <td class="datacell" style="border-right-width:1px;word-wrap:break-word;">{!accountSo.Date_of_Revocation_GMT__c}</td>
+              <!-- <td class="datacell" style="border-right-width:1px;word-wrap:break-word;">{!accountSo.OneCRL_Status__c}</td>  -->
+              <td class="datacell" style="border-right-width:1px;word-wrap:break-word;">{!accountSo.OneCRL_Bug_Number__c}</td>
+              <td class="datacell" style="border-right-width:1px;word-wrap:break-word;">{!accountSo.Certificate_Serial_Number__c}</td>  
+              <td class="datacell" style="border-right-width:1px;word-wrap:break-word;">{!accountSo.name}</td>
+              <td class="datacell" style="border-right-width:1px;word-wrap:break-word;">{!accountSo.Certificate_Issuer_Common_Name__c}</td>
+              <td class="datacell" style="border-right-width:1px;word-wrap:break-word;">{!accountSo.Certificate_Issuer_Organization__c}</td>
+              <td class="datacell" style="border-right-width:1px;word-wrap:break-word;">{!accountSo.Certificate_Subject_Common_Name__c}</td>
+              <td class="datacell" style="border-right-width:1px;word-wrap:break-word;">{!accountSo.Certificate_Subject_Organization__c}</td>
+              <td class="datacell" style="border-right-width:1px;word-wrap:break-word;">{!accountSo.SHA_256_Fingerprint__c}</td>
+              <td class="datacell" style="border-right-width:1px;word-wrap:break-word;">{!accountSo.Certificate_ID__c}</td>
+              <td class="datacell" style="border-right-width:1px;word-wrap:break-word;">{!accountSo.Valid_From_YYYY_MMM_DD__c}</td>
+              <td class="datacell" style="border-right-width:1px;word-wrap:break-word;">{!accountSo.Valid_To_YYYY_MMM_DD__c}</td>
+              <td class="datacell" style="border-right-width:1px;word-wrap:break-word;">{!accountSo.Public_Key_Algorithm__c}</td>
+              <td class="datacell" style="border-right-width:1px;word-wrap:break-word;">{!accountSo.Signature_Hash_Algorithm__c}</td>
+              <td class="datacell" style="border-right-width:1px;word-wrap:break-word;">{!accountSo.CRL_URL_s__c}</td>
+              <td class="datacell" style="border-right-width:1px;word-wrap:break-word;">{!accountSo.Alternate_CRL__c}</td>
+              <td class="datacell" style="border-right-width:1px;word-wrap:break-word;">{!accountSo.OCSP_URL_s__c}</td>
+              <td class="datacell" style="border-right-width:1px;word-wrap:break-word;">{!accountSo.Comments__c}</td>
+
+           </tr>
+           </apex:repeat>
+       </table>
+   </div><div class="pbFooter secondaryPalette"><div class="bg"></div></div></div></div>
+
+ </apex:page>
